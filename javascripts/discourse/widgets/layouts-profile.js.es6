@@ -6,7 +6,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 
 export default createWidget('layouts-profile', {
   tagName: 'div.user-profile.widget-container',
-  buildKey: () => 'user-profile',
+  buildKey: () => 'layouts-profile',
 
   defaultState(attrs) {
     return {
