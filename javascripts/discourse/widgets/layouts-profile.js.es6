@@ -32,11 +32,11 @@ export default createWidget('layouts-profile', {
             })
           ),
           this.attach('sidebar-profile-name')
-        ]),
-        this.attach('quick-access-profile', {
+        ])
+        /*this.attach('quick-access-profile', {
           path: currentUser.get("path"),
           showLogoutButton: false
-        })
+        })*/
       ]);
     } else {
       contents.push(
