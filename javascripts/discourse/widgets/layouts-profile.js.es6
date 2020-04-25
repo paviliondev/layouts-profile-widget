@@ -7,36 +7,23 @@ import { iconNode } from "discourse-common/lib/icon-library";
 export default createWidget('layouts-profile', {
   tagName: 'div.user-profile.widget-container',
   buildKey: () => 'layouts-profile',
-
-  defaultState(attrs) {
-    return {
-      topic: attrs.topic,
-      bookmarked: attrs.topic ? attrs.topic.bookmarked : null
-    };
-  },
   
   html(attrs, state) {
     const { currentUser } = this;
     let contents = [];
 
     if (currentUser) {
-      const username = currentUser.username;
-      const userPath = currentUser.path;
-
       contents.push([
         h('div.user-details', [
           h('div.avatar',
             avatarImg('large', {
               template: currentUser.avatar_template,
-              username
+              username: currentUser.username
             })
           ),
           this.attach('sidebar-profile-name')
-        ])
-        /*this.attach('quick-access-profile', {
-          path: currentUser.get("path"),
-          showLogoutButton: false
-        })*/
+        ]),
+        this.getQuickLinks()
       ]);
     } else {
       contents.push(
@@ -45,6 +32,32 @@ export default createWidget('layouts-profile', {
     }
 
     return h('div.widget-inner', contents);
+  },
+  
+  getQuickLinks() {
+    const path = this.currentUser.path;
+    
+    let links = [{
+      icon: "stream",
+      href: `${path}/activity`,
+      label: "user.activity_stream"
+    }];
+    
+    if (this.siteSettings.enable_personal_messages) {
+      links.push({
+        icon: "envelope",
+        href: `${path}/messages`,
+        label: "user.private_messages"
+      });
+    }
+    
+    links.push({
+      icon: "pencil-alt",
+      href: `${path}/activity/drafts`,
+      label: "user_action_groups.15"
+    });
+    
+    return h('div.quick-links', links.map(l => (this.attach('link', l))));
   }
 });
 
@@ -60,16 +73,13 @@ createWidget("sidebar-profile-name", {
   },
 
   userLink(attrs, text) {
-    return h(
-      "a",
-      {
-        attributes: {
-          href: attrs.usernameUrl,
-          "data-user-card": attrs.username
-        }
-      },
-      formatUsername(text)
-    );
+    return h("a", {
+      attributes: {
+        href: attrs.usernameUrl,
+        "data-user-card": attrs.username
+      }
+    },
+    formatUsername(text));
   },
 
   html(attrs) {
@@ -77,7 +87,6 @@ createWidget("sidebar-profile-name", {
     const { username, name } = currentUser;
         
     const contents = [h("span", [this.userLink(currentUser, name)])];
-    
     const classNames = ["first"];
     
     if (name) {
