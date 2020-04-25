@@ -5,7 +5,7 @@ import { avatarImg } from 'discourse/widgets/post';
 import { iconNode } from "discourse-common/lib/icon-library";
 
 export default createWidget('layouts-profile', {
-  tagName: 'div.user-profile.widget-container',
+  tagName: 'div.layouts-profile.widget-container',
   buildKey: () => 'layouts-profile',
   
   html(attrs, state) {
