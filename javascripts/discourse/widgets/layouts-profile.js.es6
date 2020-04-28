@@ -1,11 +1,20 @@
-import { createLayoutsWidget } from 'discourse/plugins/discourse-layouts/discourse/lib/layouts';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { formatUsername } from "discourse/lib/utilities";
 import { avatarImg } from 'discourse/widgets/post';
 import { iconNode } from "discourse-common/lib/icon-library";
 
-export default createLayoutsWidget('profile', {  
+let layoutsError;
+let layouts;
+
+try {
+  layouts = requirejs('discourse/plugins/discourse-layouts/discourse/lib/layouts');
+} catch(error) {
+  layouts = { createLayoutsWidget: createWidget };
+  console.error(error);
+}
+
+export default layouts.createLayoutsWidget('profile', {  
   html(attrs, state) {
     const { currentUser } = this;
     let contents = [];
