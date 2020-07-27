@@ -58,12 +58,6 @@ export default layouts.createLayoutsWidget('profile', {
       });
     }
     
-    links.push({
-      icon: "pencil-alt",
-      href: `${path}/activity/drafts`,
-      label: "user_action_groups.15"
-    });
-    
     return h('div.quick-links', links.map(l => (this.attach('link', l))));
   }
 });
@@ -92,13 +86,7 @@ createWidget("sidebar-profile-name", {
   html(attrs) {
     const { currentUser } = this;
     const { username, name } = currentUser;
-        
-    const contents = [h("span", [this.userLink(currentUser, name)])];
     const classNames = ["first"];
-    
-    if (name) {
-      classNames.push("full-name");
-    }
     
     if (currentUser.staff) {
       classNames.push("staff");
@@ -113,8 +101,9 @@ createWidget("sidebar-profile-name", {
       classNames.push("new-user");
     }
 
+    const contents = [];
+    
     const nameContents = [this.userLink(currentUser, username)];
-
     const glyph = this.posterGlyph(currentUser);
     if (glyph) {
       nameContents.push(glyph);
@@ -124,7 +113,7 @@ createWidget("sidebar-profile-name", {
       h("span", { className: classNames.join(" ") }, nameContents)
     );
 
-    const title = currentUser.user_title;
+    const title = currentUser.title;
     if (title && title.length) {
       
       const primaryGroupName = currentUser.primary_group_name;
