@@ -15,13 +15,13 @@
     margin: 12px 0 5px 0;
     padding: 0 5px;
     display: flex;
-    justify-content: space-between;
       
     a {
       display: flex;
       align-items: center;
       color: $primary-medium;
       font-size: 0.9em;
+      margin-right: 15px;
       
       &:last-of-type {
         margin-right: 0;
