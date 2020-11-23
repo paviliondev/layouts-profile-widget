@@ -34,7 +34,7 @@ export default layouts.createLayoutsWidget('profile', {
       ]);
     } else {
       contents.push(
-        h('div.widget-title', I18n.t('profile_widget.guest'))
+        h('div.widget-title', I18n.t(themePrefix('profile_widget.guest')))
       );
     }
 
