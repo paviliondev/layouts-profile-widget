@@ -11,4 +11,4 @@ profile_links:
     - drafts
     - preferences
   description:
-    en: Quick profile links in widget
+    en: "Profile links in widget. Accepts: summary, activity, messages, invites, drafts, preferences"
