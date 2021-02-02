@@ -14,6 +14,15 @@ try {
   console.error(error);
 }
 
+function userLink(user, className, contents) {
+  return h(`a.${className}`, {
+    attributes: {
+      href: user.usernameUrl,
+      "data-user-card": user.username
+    }
+  }, contents);
+}
+
 export default layouts.createLayoutsWidget('profile', {  
   html(attrs, state) {
     const { currentUser } = this;
@@ -22,12 +31,10 @@ export default layouts.createLayoutsWidget('profile', {
     if (currentUser) {
       contents.push([
         h('div.user-details', [
-          h('div.avatar',
-            avatarImg('large', {
-              template: currentUser.avatar_template,
-              username: currentUser.username
-            })
-          ),
+          userLink(currentUser, 'avatar', avatarImg('large', {
+            template: currentUser.avatar_template,
+            username: currentUser.username
+          })),
           this.attach('sidebar-profile-name')
         ]),
         this.getQuickLinks()
@@ -42,23 +49,66 @@ export default layouts.createLayoutsWidget('profile', {
   },
   
   getQuickLinks() {
-    const path = this.currentUser.path;
+    let links = settings.profile_links.split('|');
     
-    let links = [{
-      icon: "stream",
-      href: `${path}/activity`,
-      label: "user.activity_stream"
-    }];
-    
-    if (this.siteSettings.enable_personal_messages) {
-      links.push({
-        icon: "envelope",
-        href: `${path}/messages`,
-        label: "user.private_messages"
-      });
-    }
+    links = links.reduce((result, name) => {
+      let skip = (
+        (name == 'messages' && !this.siteSettings.enable_personal_messages)
+      )
+      
+      if (!skip) {
+        result.push(this.getQuickLink(name));
+      }
+      
+      return result;
+    }, []);
     
     return h('div.quick-links', links.map(l => (this.attach('link', l))));
+  },
+  
+  getQuickLink(name) {
+    const path = this.currentUser.path;
+    let result = {};
+    
+    switch(name) {
+      case 'activity':
+        result = {
+          icon: "stream",
+          href: `${path}/activity`,
+          label: "user.activity_stream"
+        }
+        break;
+      case 'messages':
+        result = {
+          icon: "envelope",
+          href: `${path}/messages`,
+          label: "user.private_messages"
+        }
+        break;
+      case 'invites':
+        result = {
+          icon: "user-plus",
+          href: `${path}/invited`,
+          label: "user.invited.title",
+        }
+        break;
+      case 'drafts':
+        result = {
+          icon: "pencil-alt",
+          href: `${path}/activity/drafts`,
+          label: "user_action_groups.15",
+        }
+        break;
+      case 'preferences':
+        result = {
+          icon: "cog",
+          href: `${path}/preferences`,
+          label: "user.preferences"
+        }
+        break;
+    }
+    
+    return result;
   }
 });
 
@@ -71,16 +121,6 @@ createWidget("sidebar-profile-name", {
         title: I18n.t("user.moderator_tooltip")
       });
     }
-  },
-
-  userLink(attrs, text) {
-    return h("a", {
-      attributes: {
-        href: attrs.usernameUrl,
-        "data-user-card": attrs.username
-      }
-    },
-    formatUsername(text));
   },
 
   html(attrs) {
@@ -103,7 +143,14 @@ createWidget("sidebar-profile-name", {
 
     const contents = [];
     
-    const nameContents = [this.userLink(currentUser, username)];
+    const nameContents = [];
+    if (name) {
+      nameContents.push(userLink(currentUser, 'name', name));
+    }
+    nameContents.push(
+      userLink(currentUser, 'username', formatUsername(username))
+    );
+    
     const glyph = this.posterGlyph(currentUser);
     if (glyph) {
       nameContents.push(glyph);

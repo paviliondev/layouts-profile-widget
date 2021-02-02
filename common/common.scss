@@ -9,11 +9,19 @@
     margin-left: 7px;
     align-items: flex-start;
     flex-flow: wrap;
+    
+    span.first {
+      flex-direction: column;
+      
+      .name + .username {
+        font-weight: 400;
+      }
+    }
   }
   
   .quick-links {
-    margin: 12px 0 5px 0;
-    padding: 0 5px;
+    margin: 12px 0 0 0;
+    padding: 0;
     display: flex;
       
     a {
@@ -21,7 +29,7 @@
       align-items: center;
       color: $primary;
       font-size: 0.9em;
-      margin-right: 15px;
+      margin-right: 12px;
       
       &:last-of-type {
         margin-right: 0;

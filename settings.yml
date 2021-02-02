@@ -1,0 +1,14 @@
+profile_links:
+  default: 'activity|messages'
+  type: list
+  allow_any: false
+  list_type: compact
+  choices:
+    - summary
+    - activity
+    - messages
+    - invites
+    - drafts
+    - preferences
+  description:
+    en: Quick profile links in widget
