@@ -26,23 +26,28 @@ function userLink(user, className, contents) {
 export default layouts.createLayoutsWidget('profile', {  
   html(attrs, state) {
     const { currentUser } = this;
+    const { sidebarMinimized } = attrs;
     let contents = [];
 
     if (currentUser) {
-      contents.push([
-        h('div.user-details', [
+      contents.push(h('div.user-details', [
           userLink(currentUser, 'avatar', avatarImg('large', {
             template: currentUser.avatar_template,
             username: currentUser.username
           })),
           this.attach('sidebar-profile-name')
-        ]),
-        this.getQuickLinks()
-      ]);
+        ]));
+        if (!sidebarMinimized) {
+          contents.push(this.getQuickLinks());
+        }
     } else {
-      contents.push(
-        h('div.widget-title', I18n.t(themePrefix('profile_widget.guest')))
-      );
+      if (!sidebarMinimized) {
+        contents.push(
+          h('div.widget-title', I18n.t(themePrefix('profile_widget.guest')))
+        );
+      } else {
+        contents.push(h('div.user-details', iconNode('user')));
+      }
     }
 
     return h('div.widget-inner', contents);
