@@ -45,3 +45,18 @@
     }
   }
 }
+
+.layouts-sidebar-minimized {
+  .layouts-profile .user-details {
+    justify-content: center;
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+    }
+
+    .names {
+      display: none;
+    }
+  }
+}
